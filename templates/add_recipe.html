@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
+
+    .form-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-title {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .form-subtitle {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .required {
+        color: #e84c4f;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #e84c4f;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .helper-text {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 0.25rem;
+    }
+
+    .submit-btn {
+        background-color: #e84c4f;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+        background-color: #d43c3f;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-box">
+        <h1 class="form-title">Share Your Recipe</h1>
+        <p class="form-subtitle">Fill in the details below to share your amazing recipe with the community!</p>
+
+        <form method="POST" action="{{ url_for('add_recipe') }}">
+            <div class="form-group">
+                <label for="name">Recipe Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" placeholder="e.g., Chocolate Chip Cookies" required>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category <span class="required">*</span></label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Snack">Snack</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="prep_time">Prep Time (minutes) <span class="required">*</span></label>
+                    <input type="number" id="prep_time" name="prep_time" placeholder="15" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cook_time">Cook Time (minutes) <span class="required">*</span></label>
+                    <input type="number" id="cook_time" name="cook_time" placeholder="30" min="0" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="servings">Servings <span class="required">*</span></label>
+                <input type="number" id="servings" name="servings" placeholder="4" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ingredients">Ingredients <span class="required">*</span></label>
+                <textarea id="ingredients" name="ingredients" placeholder="Enter each ingredient on a new line:
+- 2 cups flour
+- 1 cup sugar
+- 3 eggs" required></textarea>
+                <p class="helper-text">Enter each ingredient on a new line</p>
+            </div>
+
+            <div class="form-group">
+                <label for="instructions">Instructions <span class="required">*</span></label>
+                <textarea id="instructions" name="instructions" placeholder="Enter step-by-step instructions:
+1. Preheat oven to 350°F
+2. Mix dry ingredients
+3. Add wet ingredients..." required></textarea>
+                <p class="helper-text">Enter step-by-step instructions</p>
+            </div>
+
+            <div class="form-group">
+                <label for="image_url">Image URL (optional)</label>
+                <input type="url" id="image_url" name="image_url" placeholder="https://example.com/recipe-image.jpg">
+                <p class="helper-text">Paste a link to your recipe image</p>
+            </div>
+
+            <button type="submit" class="submit-btn">+ Add Recipe</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

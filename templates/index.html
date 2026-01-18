@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        background: linear-gradient(135deg, #e84c4f 0%, #f06868 100%);
+        color: white;
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background-color: rgba(255,255,255,0.2);
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-primary:hover {
+        background-color: white;
+        color: #e84c4f;
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: #e84c4f;
+        border: 2px solid white;
+    }
+
+    .btn-secondary:hover {
+        background-color: rgba(255,255,255,0.9);
+    }
+
+    .section {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
+
+    .section-title {
+        color: #0066cc;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .recipe-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .recipe-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .recipe-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .recipe-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .recipe-image.pink {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .recipe-image.blue {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .recipe-image.green {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .recipe-content {
+        padding: 1.5rem;
+    }
+
+    .recipe-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        color: white;
+    }
+
+    .badge-breakfast {
+        background-color: #e84c4f;
+    }
+
+    .badge-lunch {
+        background-color: #f5576c;
+    }
+
+    .badge-dinner {
+        background-color: #e84c4f;
+    }
+
+    .badge-dessert {
+        background-color: #38f9d7;
+    }
+
+    .recipe-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .recipe-meta {
+        display: flex;
+        gap: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .recipe-author {
+        color: #999;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .category-card {
+        background: white;
+        border-radius: 10px;
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        text-decoration: none;
+    }
+
+    .category-card:hover {
+        transform: scale(1.05);
+    }
+
+    .category-breakfast {
+        background-color: #4a7c4e;
+    }
+
+    .category-lunch {
+        background-color: #2e5a87;
+    }
+
+    .category-dinner {
+        background-color: #3d6d5c;
+    }
+
+    .category-dessert {
+        background-color: #8b4644;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to TastyRecipes</h1>
+    <p>Discover, Share, and Cook Amazing Recipes</p>
+    <div class="hero-buttons">
+        <a href="{{ url_for('view_recipes') }}" class="btn btn-primary">Browse Recipes</a>
+        {% if session.user_id %}
+        <a href="{{ url_for('add_recipe') }}" class="btn btn-secondary">Share Your Recipe</a>
+        {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-secondary">Join Now</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">Featured Recipes</h2>
+    <div class="recipe-grid">
+        {% for recipe in featured_recipes %}
+        <a href="{{ url_for('view_recipe', id=recipe.id) }}" class="recipe-card">
+            <div class="recipe-image {% if loop.index0 % 3 == 0 %}blue{% elif loop.index0 % 3 == 1 %}pink{% else %}green{% endif %}">
+                🍴
+            </div>
+            <div class="recipe-content">
+                <span class="recipe-badge badge-{{ recipe.category.lower() }}">{{ recipe.category }}</span>
+                <h3 class="recipe-title">{{ recipe.name }}</h3>
+                <div class="recipe-meta">
+                    <span>⏱ {{ recipe.prep_time + recipe.cook_time }} mins</span>
+                    <span>👥 {{ recipe.servings }} servings</span>
+                </div>
+                <p class="recipe-author">By {{ recipe.author.username }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">Browse by Category</h2>
+    <div class="category-grid">
+        <a href="{{ url_for('view_recipes', category='breakfast') }}" class="category-card category-breakfast">
+            ☕ Breakfast
+        </a>
+        <a href="{{ url_for('view_recipes', category='lunch') }}" class="category-card category-lunch">
+            🍱 Lunch
+        </a>
+        <a href="{{ url_for('view_recipes', category='dinner') }}" class="category-card category-dinner">
+            🍽 Dinner
+        </a>
+        <a href="{{ url_for('view_recipes', category='dessert') }}" class="category-card category-dessert">
+            🧁 Desserts
+        </a>
+    </div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">Latest Recipes</h2>
+    <div class="recipe-grid">
+        {% for recipe in latest_recipes %}
+        <a href="{{ url_for('view_recipe', id=recipe.id) }}" class="recipe-card">
+            <div class="recipe-image {% if loop.index0 % 4 == 0 %}blue{% elif loop.index0 % 4 == 1 %}pink{% elif loop.index0 % 4 == 2 %}green{% else %}blue{% endif %}">
+                🍴
+            </div>
+            <div class="recipe-content">
+                <span class="recipe-badge badge-{{ recipe.category.lower() }}">{{ recipe.category }}</span>
+                <h3 class="recipe-title">{{ recipe.name }}</h3>
+                <div class="recipe-meta">
+                    <span>⏱ {{ recipe.prep_time + recipe.cook_time }} mins</span>
+                    <span>👥 {{ recipe.servings }} servings</span>
+                </div>
+                <p class="recipe-author">By {{ recipe.author.username }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

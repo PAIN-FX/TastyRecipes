@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #0066cc 0%, #0088ff 100%);
+        color: white;
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        font-size: 1.1rem;
+    }
+
+    .filters-section {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .search-box {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .category-filters {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .category-btn {
+        padding: 0.5rem 1.5rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 25px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: #666;
+    }
+
+    .category-btn:hover, .category-btn.active {
+        background-color: #e84c4f;
+        color: white;
+        border-color: #e84c4f;
+    }
+
+    .recipes-section {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .recipes-count {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .recipe-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .recipe-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        position: relative;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .recipe-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .recipe-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .recipe-image.pink {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .recipe-image.blue {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .recipe-image.green {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .recipe-content {
+        padding: 1.5rem;
+    }
+
+    .recipe-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        color: white;
+    }
+
+    .badge-breakfast {
+        background-color: #e84c4f;
+    }
+
+    .badge-lunch {
+        background-color: #f5576c;
+    }
+
+    .badge-dinner {
+        background-color: #e84c4f;
+    }
+
+    .badge-dessert {
+        background-color: #38f9d7;
+    }
+
+    .badge-snack {
+        background-color: #ffa726;
+    }
+
+    .recipe-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .recipe-meta {
+        display: flex;
+        gap: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .recipe-author {
+        color: #999;
+        font-size: 0.85rem;
+    }
+
+    .recipe-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .btn-edit {
+        background-color: #0066cc;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background-color: #0055aa;
+    }
+
+    .btn-delete {
+        background-color: #e84c4f;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #d43c3f;
+    }
+
+    .no-recipes {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>All Recipes</h1>
+    <p>Browse through our collection of delicious recipes</p>
+</div>
+
+<div class="filters-section">
+    <div class="search-box">
+        <form method="GET" action="{{ url_for('view_recipes') }}">
+            <input type="text" name="search" class="search-input" placeholder="Search recipes..." value="{{ search }}">
+            <div class="category-filters">
+                <a href="{{ url_for('view_recipes') }}" class="category-btn {% if not current_category or current_category == 'all' %}active{% endif %}">All</a>
+                <a href="{{ url_for('view_recipes', category='breakfast') }}" class="category-btn {% if current_category == 'breakfast' %}active{% endif %}">Breakfast</a>
+                <a href="{{ url_for('view_recipes', category='lunch') }}" class="category-btn {% if current_category == 'lunch' %}active{% endif %}">Lunch</a>
+                <a href="{{ url_for('view_recipes', category='dinner') }}" class="category-btn {% if current_category == 'dinner' %}active{% endif %}">Dinner</a>
+                <a href="{{ url_for('view_recipes', category='dessert') }}" class="category-btn {% if current_category == 'dessert' %}active{% endif %}">Dessert</a>
+                <a href="{{ url_for('view_recipes', category='snack') }}" class="category-btn {% if current_category == 'snack' %}active{% endif %}">Snack</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="recipes-section">
+    <p class="recipes-count">{{ recipes|length }} recipes found</p>
+    
+    {% if recipes %}
+    <div class="recipe-grid">
+        {% for recipe in recipes %}
+        <div>
+            <a href="{{ url_for('view_recipe', id=recipe.id) }}" class="recipe-card">
+                <div class="recipe-image {% if loop.index0 % 4 == 0 %}blue{% elif loop.index0 % 4 == 1 %}pink{% elif loop.index0 % 4 == 2 %}green{% else %}blue{% endif %}">
+                    🍴
+                </div>
+                <div class="recipe-content">
+                    <span class="recipe-badge badge-{{ recipe.category.lower() }}">{{ recipe.category }}</span>
+                    <h3 class="recipe-title">{{ recipe.name }}</h3>
+                    <div class="recipe-meta">
+                        <span>⏱ {{ recipe.prep_time + recipe.cook_time }} mins</span>
+                        <span>👥 {{ recipe.servings }} servings</span>
+                    </div>
+                    <p class="recipe-author">By {{ recipe.author.username }}</p>
+                </div>
+            </a>
+            
+            {% if session.user_id == recipe.user_id %}
+            <div class="recipe-actions" style="padding: 0 1.5rem 1.5rem;">
+                <a href="{{ url_for('edit_recipe', id=recipe.id) }}" class="action-btn btn-edit">Edit</a>
+                <a href="{{ url_for('delete_recipe', id=recipe.id) }}" class="action-btn btn-delete" onclick="return confirm('Are you sure you want to delete this recipe?')">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-recipes">
+        <h2>No recipes found</h2>
+        <p>Try adjusting your search or filters</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
