@@ -15,10 +15,10 @@ if not os.path.exists('data'):
 import os
 
 # Example for Render PostgreSQL
-DB_USER = os.environ.get('DB_USER', 'tastyrecipes_user')
-DB_PASSWORD = os.environ.get('DB_PASSWORD', 'gav1X9TqHu4WoILji2A0y5M5Pm7y1jHV')
-DB_HOST = os.environ.get('DB_HOST', 'dpg-d5mgr2p4tr6s73cl7bo0-a')
-DB_NAME = os.environ.get('DB_NAME', 'tastyrecipes')
+DB_USER = os.environ.get('DB_USER', 'tastyrecipes_5r15_user')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'oIrNMb6T15nXlOc7g2P47UCurud47qUk')
+DB_HOST = os.environ.get('DB_HOST', 'dpg-d6h1p5q4d50c73f2gb20-a')
+DB_NAME = os.environ.get('DB_NAME', 'tastyRecipes')
 DB_PORT = os.environ.get('DB_PORT', '5432')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
@@ -198,3 +198,4 @@ if __name__ == '__main__':
     # Bind to 0.0.0.0 to allow external access
 
     app.run(host='0.0.0.0', port=port, debug=False)
+
